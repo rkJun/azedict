@@ -18,79 +18,103 @@
 
 <body>
 
+
 <nav>
     <div class="nav-wrapper teal lighten-2">
-        <a href="#" class="brand-logo"><img src="img/azelogo.png" title="azedict" /></a>
+        <a href="/" class="brand-logo"><img src="img/azelogo.png" title="azedict" class="vertical-align-middle" /></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="about.html">about</a></li>
         </ul>
     </div>
-
 </nav>
+
 <div class="container">
     <div class="row">
-        <form class="col s12">
-            <div class="row">
+        <form class="row valign-wrapper">
+            <div class="col s9">
                 <div class="input-field">
                     <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                     <input id="search" type="search" required>
                     <i class="material-icons">close</i>
                 </div>
             </div>
+            <div class="col s3">
+                <button class="btn waves-effect waves-light" type="submit" id="btnSave" name="action">새단어 등록
+                    <i class="material-icons right">mode_edit</i>
+                </button>
+            </div>
+        </form>
+
+    </div>
+    <div class="row hide" id="write_area" v-if="isLogin">
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="word_name" type="text" class="validate">
+                    <label for="word_name">word name</label>
+                </div>
+                <div class="input-field col s6 chip">
+                    <img :src="'{{ photoURL }}'" :alt="'{{ displayName }}'">{{ displayName }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="textarea1" class="materialize-textarea"></textarea>
+                    <label for="textarea1">내용</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="link1" type="text" class="validate" value="http://">
+                    <label for="link1">출처 링크</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <button class="btn waves-effect waves-light" type="submit" id="btnSave" name="action">Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
         </form>
     </div>
+    <div class="row" v-else>
+        <div class="col s9">
+            페이스북 로그인 후 새 단어를 등록 할 수 있습니다.
+        </div>
+        <div class="col s3">
+            <button class="btn waves-effect waves-light" type="submit" id="btnLogin" name="action">페이스북 로그인
+                <i class="material-icons right">perm_identity</i>
+            </button>
+        </div>
+    </div>
 
-    <div class="row">
-        <div class="col s12 m6">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Card Title</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
-                        I am convenient because I require little markup to use effectively.</p>
-                </div>
-                <div class="card-action">
-                    <a href="#">This is a link</a>
-                    <a href="#">This is a link</a>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m6">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Card Title</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
-                        I am convenient because I require little markup to use effectively.</p>
-                </div>
-                <div class="card-action">
-                    <a href="#">This is a link</a>
-                    <a href="#">This is a link</a>
+    <div id="card-row">
+        <div class="row" v-for="item in items">
+            <div class="col s12 m12">
+                <div class="card pink lighten-5">
+                    <div class="card-content black-text">
+                        <span class="card-title">{{ item.word_name }}</span>
+                        <p> {{item.word_body}} </p>
+                    </div>
+                    <!--<div class="card-action">-->
+                        <!--<a href="{{item.link}}" class="black-text">link1</a>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
+
     </div>
-    <div class="row">
-        <div class="col s12 m6">
-            <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Card Title</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
-                        I am convenient because I require little markup to use effectively.</p>
-                </div>
-                <div class="card-action">
-                    <a href="#">This is a link</a>
-                    <a href="#">This is a link</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <div id="status"></div>
 </div>
-
-
-
-
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<!--<script src="https://unpkg.com/vue@2.4.1/dist/vue.min.js"></script>-->
 <script src="js/main.js"></script>
+<script>
+</script>
 </body>
 </html>
