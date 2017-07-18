@@ -12,43 +12,70 @@
     firebase.initializeApp(config);
 
     var provider = new firebase.auth.FacebookAuthProvider();
-
-    /////////
+    
     // global az
     window.az = {};
+    window.vapp = {};
 
     az.isLogin = function() {
-        // login check
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-                true;
-            } else {
-                // No user is signed in.
-                false;
-            }
-        });
-    }
-
-    az.getUser = function() {
         var user = firebase.auth().currentUser;
 
         if (user) {
             // User is signed in.
-            return user;
+            return true;
         } else {
             // No user is signed in.
-            return {};
+            return false;
         }
-    }
+    };
+
+    az.getUser = function() {
+
+        // login check
+        firebase.auth().onAuthStateChanged(function(user) {
+            var isLogin = false;
+            var displayName = "";
+            var photoURL = "";
+            if (user) {
+                // User is signed in.
+                isLogin = true;
+                displayName = user.displayName;
+                photoURL = user.photoURL;
+            } else {
+                isLogin = false;
+
+            }
+
+            vapp.writeApp = new Vue({
+                el: '#write_area',
+                data: {
+                    isLogin: isLogin,
+                    displayName: displayName,
+                    photoURL: photoURL
+                },
+                methods: {
+                    logout: az.facebookLogout
+                }
+            });
+
+        });
+
+    };
 
     az.facebookLogout = function() {
+        console.log('logout');
         firebase.auth().signOut().then(function() {
-            // Sign-out successful.
+
+            vapp.writeApp.isLogin = false;
+            vapp.writeApp.displayName = "";
+            vapp.writeApp.photoURL = "";
+            console.log('logout ok');
+
         }, function(error) {
             // An error happened.
+            console.log (error);
         });
-    }
+    };
 
     az.facebookLogin = function() {
         firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -56,6 +83,10 @@
             var token = result.credential.accessToken;
             // The signed-in user info.
             var user = result.user;
+
+            vapp.writeApp.isLogin = true;
+            vapp.writeApp.displayName = user.displayName;
+            vapp.writeApp.photoURL = user.photoURL;
 
         }).catch(function(error) {
             // Handle Errors here.
@@ -113,22 +144,15 @@ $( document ).ready( function() {
             }
         });
 
-        var writeApp = new Vue({
-            el: '#write_area',
-            data: {
-                isLogin: az.isLogin(),
-                displayName: az.getUser().displayName,
-                photoURL: az.getUser().photoURL
-            }
-        })
-//                app.data.items.push({word_name: "hi", word_body: "body"});
-
     });
+
+    az.getUser();
 
     $( "#btnSave" ).click( function() {
         az.writeNewPost('1', 'juntai', '버카충', '버스 카드 충전' );
     });
 
     $("#btnLogin").click( az.facebookLogin );
+
 });
 

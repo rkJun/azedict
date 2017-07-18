@@ -46,15 +46,18 @@
         </form>
 
     </div>
-    <div class="row hide" id="write_area" v-if="isLogin">
+    <div class="row" id="write_area" v-if="isLogin">
         <form class="col s12">
             <div class="row">
                 <div class="input-field col s6">
                     <input id="word_name" type="text" class="validate">
                     <label for="word_name">word name</label>
                 </div>
-                <div class="input-field col s6 chip">
-                    <img :src="'{{ photoURL }}'" :alt="'{{ displayName }}'">{{ displayName }}
+                <div class="input-field col s6">
+                    <div class="chip">
+                        <img v-bind:src="photoURL" v-bind:alt="displayName" />{{ displayName }}
+                    </div>
+                    <a href="javascript:void(0)" v-on:click="logout">log out</a>
                 </div>
             </div>
             <div class="row">
