@@ -127,26 +127,51 @@
 
 $( document ).ready( function() {
 
-    firebase.database().ref('/posts/').once('value').then( function(snapshot) {
-        var results = snapshot.val();
-
-        var keys = Object.keys(results);
-        var items = [];
-
-        keys.forEach(function(key){
-            items.push({word_name: results[key].word_name, word_body: results[key].word_body});
-        });
-
-        var app = new Vue({
-            el: '#card-row',
-            data: {
-                items: items
-            }
-        });
-
+    var cardRow = new Vue({
+        el: '#card-row',
+        data: {
+            items: []
+        }
     });
 
+    function searchList( keyword ) {
+        var searchOrder = firebase.database().ref('/posts/').orderByChild("word_name");
+
+        if ( keyword && keyword !== "") {
+            searchOrder = firebase.database().ref('/posts/').orderByChild("word_name").equalTo( keyword );
+        }
+
+        searchOrder.on('value', function(snapshot) {
+            var results = snapshot.val();
+            var items = [];
+
+            if ( results ) {
+                var keys = Object.keys(results);
+
+                keys.forEach(function(key){
+                    items.push({word_name: results[key].word_name, word_body: results[key].word_body});
+                });
+            }
+
+            cardRow.items = items;
+        });
+    };
+
+    searchList("");
+
     // az.getUser();
+
+    var searchApp = new Vue({
+        el: "#search",
+        data: {
+            keyword: ""
+        },
+        methods: {
+            search: function() {
+                return searchList( this.keyword );
+            }
+        }
+    });
 
     $( "#btnSave" ).click( function() {
     });
