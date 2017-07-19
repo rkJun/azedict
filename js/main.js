@@ -146,10 +146,9 @@ $( document ).ready( function() {
 
     });
 
-    az.getUser();
+    // az.getUser();
 
     $( "#btnSave" ).click( function() {
-        az.writeNewPost('1', 'juntai', '버카충', '버스 카드 충전' );
     });
 
     $("#btnLogin").click( az.facebookLogin );
