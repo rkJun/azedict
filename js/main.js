@@ -41,7 +41,7 @@
             isLogin = true;
             displayName = user.displayName;
             photoURL = user.photoURL;
-            uid = user.uid;
+            uid = user.providerData[0].uid;
         } else {
             isLogin = false;
             displayName = "";
@@ -68,7 +68,7 @@
                 isLogin = true;
                 displayName = user.displayName;
                 photoURL = user.photoURL;
-                uid = user.uid;
+                uid = user.providerData[0].uid;
             } else {
                 isLogin = false;
                 displayName = "";
@@ -121,13 +121,14 @@
         });
     };
 
-    az.writeNewPost = function (uid, username, word_name, word_body) {
+    az.writeNewPost = function (uid, username, word_name, word_body, link1) {
         // A post entry.
         var postData = {
             author: username,
             uid: uid,
             word_body: word_body,
             word_name: word_name,
+            link1: link1,
             right_count: 0,
             wrong_count: 0
         };
@@ -168,7 +169,10 @@ $( document ).ready( function() {
             isLogin: false,
             displayName: "",
             photoURL: "",
-            uid: ""
+            uid: "",
+            word_name: "",
+            word_body: "",
+            link1: ""
         },
         methods: {
             logout: az.facebookLogout
@@ -225,7 +229,13 @@ $( document ).ready( function() {
 
 
     $( "#btnSave" ).click( function() {
-        az.writeNewPost(vapp.writeApp.uid, vapp.writeApp.displayName, word_name, word_body);
+        var returnVal = az.writeNewPost(vapp.writeApp.uid, vapp.writeApp.displayName, vapp.writeApp.word_name, vapp.writeApp.word_body,
+        vapp.writeApp.link1);
+
+        returnVal.then(function(){
+            Materialize.toast(vapp.writeApp.word_name + ' 단어가 등록되었습니다!', 3000, 'rounded');
+        });
+
     });
 
     $("#btnLogin").click( az.facebookLogin );

@@ -45,7 +45,7 @@
         <form class="col s12"  v-show="isLogin" v-on:submit.prevent>
             <div class="row">
                 <div class="input-field col s6">
-                    <input id="word_name" type="text" class="validate">
+                    <input id="word_name" type="text" class="validate" v-model="word_name">
                     <label for="word_name">word name</label>
                 </div>
                 <div class="input-field col s6">
@@ -57,13 +57,13 @@
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea id="textarea1" class="materialize-textarea"></textarea>
+                    <textarea id="textarea1" class="materialize-textarea" v-model="word_body"></textarea>
                     <label for="textarea1">내용</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="link1" type="text" class="validate" value="http://">
+                    <input id="link1" type="text" class="validate" value="http://" v-model="link1">
                     <label for="link1">출처 링크</label>
                 </div>
             </div>
@@ -74,16 +74,18 @@
                 </button>
             </div>
         </form>
-    </div>
-    <div class="row" v-show="isLogin === false">
-        <div class="col s9">
-            페이스북 로그인 후 새 단어를 등록 할 수 있습니다.
+
+        <div class="row" v-show="!isLogin">
+            <div class="col s9">
+                페이스북 로그인 후 새 단어를 등록 할 수 있습니다.
+            </div>
+            <div class="col s3">
+                <button class="btn waves-effect waves-light" type="submit" id="btnLogin" name="action">페이스북 로그인
+                    <i class="material-icons right">perm_identity</i>
+                </button>
+            </div>
         </div>
-        <div class="col s3">
-            <button class="btn waves-effect waves-light" type="submit" id="btnLogin" name="action">페이스북 로그인
-                <i class="material-icons right">perm_identity</i>
-            </button>
-        </div>
+
     </div>
 
     <div id="card-count" v-cloak>
