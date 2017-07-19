@@ -41,8 +41,8 @@
         </form>
 
     </div>
-    <div class="row" id="write_area" v-cloak>
-        <form class="col s12"  v-show="isLogin">
+    <div id="write_area" v-cloak>
+        <form class="col s12"  v-show="isLogin" v-on:submit.prevent>
             <div class="row">
                 <div class="input-field col s6">
                     <input id="word_name" type="text" class="validate">
@@ -75,7 +75,7 @@
             </div>
         </form>
     </div>
-    <div class="row hide" v-show="!isLogin">
+    <div class="row" v-show="isLogin === false">
         <div class="col s9">
             페이스북 로그인 후 새 단어를 등록 할 수 있습니다.
         </div>
@@ -86,8 +86,14 @@
         </div>
     </div>
 
-    <div id="card-row" v-cloak>
-        <div class="row" v-for="item in items">
+    <div id="card-count" v-cloak>
+        <div class="col s12">
+            전체 등록된 단어수 : {{ count }} 개
+        </div>
+    </div>
+
+    <div id="card-row">
+        <div class="row" v-for="item in items" v-cloak>
             <div class="col s12 m12">
                 <div class="card pink lighten-5">
                     <div class="card-content black-text">

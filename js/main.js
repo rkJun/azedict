@@ -30,36 +30,56 @@
     };
 
     az.getUser = function() {
+        var user = firebase.auth().currentUser;
+
+        var isLogin = false;
+        var displayName = "";
+        var photoURL = "";
+        var uid = "";
+
+        if (user) {
+            isLogin = true;
+            displayName = user.displayName;
+            photoURL = user.photoURL;
+            uid = user.uid;
+        } else {
+            isLogin = false;
+            displayName = "";
+            photoURL = "";
+        }
+
+        vapp.writeApp.isLogin = isLogin;
+        vapp.writeApp.displayName = displayName;
+        vapp.writeApp.photoURL = photoURL;
+        vapp.writeApp.uid = uid;
+
+    };
+
+    az.getUserChanged = function() {
 
         // login check
         firebase.auth().onAuthStateChanged(function(user) {
             var isLogin = false;
             var displayName = "";
             var photoURL = "";
+            var uid = "";
             if (user) {
                 // User is signed in.
                 isLogin = true;
                 displayName = user.displayName;
                 photoURL = user.photoURL;
+                uid = user.uid;
             } else {
                 isLogin = false;
-
+                displayName = "";
+                photoURL = "";
             }
 
-            vapp.writeApp = new Vue({
-                el: '#write_area',
-                data: {
-                    isLogin: isLogin,
-                    displayName: displayName,
-                    photoURL: photoURL
-                },
-                methods: {
-                    logout: az.facebookLogout
-                }
-            });
-
+            vapp.writeApp.isLogin = isLogin;
+            vapp.writeApp.displayName = displayName;
+            vapp.writeApp.photoURL = photoURL;
+            vapp.writeApp.uid = uid;
         });
-
     };
 
     az.facebookLogout = function() {
@@ -87,6 +107,7 @@
             vapp.writeApp.isLogin = true;
             vapp.writeApp.displayName = user.displayName;
             vapp.writeApp.photoURL = user.photoURL;
+            vapp.writeApp.uid = user.uid;
 
         }).catch(function(error) {
             // Handle Errors here.
@@ -127,6 +148,13 @@
 
 $( document ).ready( function() {
 
+    var cardCount = new Vue({
+        el: '#card-count',
+        data: {
+            count: 0
+        }
+    });
+
     var cardRow = new Vue({
         el: '#card-row',
         data: {
@@ -134,9 +162,31 @@ $( document ).ready( function() {
         }
     });
 
-    function searchList( keyword ) {
-        var searchOrder = firebase.database().ref('/posts/').orderByChild("word_name");
+    vapp.writeApp = new Vue({
+        el: '#write_area',
+        data: {
+            isLogin: false,
+            displayName: "",
+            photoURL: "",
+            uid: ""
+        },
+        methods: {
+            logout: az.facebookLogout
+        }
+    });
 
+
+    firebase.database().ref('/posts/').once('value').then(function(snapshot){
+        var allCount = 0;
+        if ( snapshot.val() ) {
+            allCount = Object.keys(snapshot.val()).length;
+            cardCount.count = allCount;
+        }
+    });
+
+    function searchList( keyword ) {
+
+        var searchOrder = firebase.database().ref('/posts/').orderByChild("word_name");
         if ( keyword && keyword !== "") {
             searchOrder = firebase.database().ref('/posts/').orderByChild("word_name").equalTo( keyword );
         }
@@ -157,9 +207,9 @@ $( document ).ready( function() {
         });
     };
 
-    searchList("");
+    // searchList("");
 
-    // az.getUser();
+    az.getUserChanged();
 
     var searchApp = new Vue({
         el: "#search",
@@ -173,7 +223,9 @@ $( document ).ready( function() {
         }
     });
 
+
     $( "#btnSave" ).click( function() {
+        az.writeNewPost(vapp.writeApp.uid, vapp.writeApp.displayName, word_name, word_body);
     });
 
     $("#btnLogin").click( az.facebookLogin );
