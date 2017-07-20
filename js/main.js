@@ -79,17 +79,23 @@
             vapp.writeApp.displayName = displayName;
             vapp.writeApp.photoURL = photoURL;
             vapp.writeApp.uid = uid;
+
+            $("#btnLogin").html( displayName );
+            $("#btnLogin").unbind("click").click(function(){
+                Materialize.toast("이미 로그인이 완료되었습니다.", 3000, 'rounded');
+            });
         });
     };
 
     az.facebookLogout = function() {
-        console.log('logout');
         firebase.auth().signOut().then(function() {
 
             vapp.writeApp.isLogin = false;
             vapp.writeApp.displayName = "";
             vapp.writeApp.photoURL = "";
-            console.log('logout ok');
+
+            $("#btnLogin").html( "페이스북에 로그인하여 새단어등록하기" );
+            $("#btnLogin").click( az.facebookLogin );
 
         }, function(error) {
             // An error happened.
@@ -172,7 +178,8 @@ $( document ).ready( function() {
             uid: "",
             word_name: "",
             word_body: "",
-            link1: ""
+            link1: "",
+            isShow: false
         },
         methods: {
             logout: az.facebookLogout
@@ -190,9 +197,13 @@ $( document ).ready( function() {
 
     function searchList( keyword ) {
 
-        var searchOrder = firebase.database().ref('/posts/').orderByChild("word_name");
-        if ( keyword && keyword !== "") {
+        var searchOrder;
+        if (keyword === "전체") {
+            searchOrder = firebase.database().ref('/posts/').orderByChild("word_name");
+        } else if ( keyword && keyword !== "") {
             searchOrder = firebase.database().ref('/posts/').orderByChild("word_name").equalTo( keyword );
+        } else {
+            return;
         }
 
         searchOrder.on('value', function(snapshot) {
@@ -227,8 +238,39 @@ $( document ).ready( function() {
         }
     });
 
+    var btnLoginButton = new Vue({
+        el: "#btnLogin",
+        data: {
+            isLogin: ""
+        },
+        methods: {
+            login: function() {
+                az.facebookLogin();
+            }
+
+        }
+    });
+
+    btnLoginButton.isLogin = vapp.writeApp.isLogin;
 
     $( "#btnSave" ).click( function() {
+
+        if (!vapp.writeApp.displayName) {
+            Materialize.toast("다시 로그인후 시도해 주세요.", 3000, 'rounded');
+            return;
+        }
+
+        if (!vapp.writeApp.word_name) {
+            Materialize.toast("단어를 입력해 주세요", 3000, 'rounded');
+            return;
+        }
+
+        if (!vapp.writeApp.word_body) {
+            Materialize.toast("내용을 입력해 주세요", 3000, 'rounded');
+            return;
+        }
+
+
         var returnVal = az.writeNewPost(vapp.writeApp.uid, vapp.writeApp.displayName, vapp.writeApp.word_name, vapp.writeApp.word_body,
         vapp.writeApp.link1);
 
