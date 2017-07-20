@@ -5,3 +5,7 @@
 [v-cloak] {
     display: none;
 }
+
+.page-footer {
+    padding-top: 0px;
+}
