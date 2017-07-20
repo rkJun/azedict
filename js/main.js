@@ -80,10 +80,6 @@
             vapp.writeApp.photoURL = photoURL;
             vapp.writeApp.uid = uid;
 
-            $("#btnLogin").html( displayName );
-            $("#btnLogin").unbind("click").click(function(){
-                Materialize.toast("이미 로그인이 완료되었습니다.", 3000, 'rounded');
-            });
         });
     };
 
@@ -93,9 +89,6 @@
             vapp.writeApp.isLogin = false;
             vapp.writeApp.displayName = "";
             vapp.writeApp.photoURL = "";
-
-            $("#btnLogin").html( "페이스북에 로그인하여 새단어등록하기" );
-            $("#btnLogin").click( az.facebookLogin );
 
         }, function(error) {
             // An error happened.
@@ -237,21 +230,6 @@ $( document ).ready( function() {
             }
         }
     });
-
-    var btnLoginButton = new Vue({
-        el: "#btnLogin",
-        data: {
-            isLogin: ""
-        },
-        methods: {
-            login: function() {
-                az.facebookLogin();
-            }
-
-        }
-    });
-
-    btnLoginButton.isLogin = vapp.writeApp.isLogin;
 
     $( "#btnSave" ).click( function() {
 

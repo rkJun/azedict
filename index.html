@@ -6,6 +6,7 @@
     <title>AZEDict : 아재사전</title>
     <meta name="description" content="Middle aged men's Korean Dictionary">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
     <link rel="stylesheet" href="css/main.css">
@@ -19,7 +20,6 @@
             <a href="/" class="brand-logo"><img src="img/azelogo.png" title="azedict" class="vertical-align-middle" /></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="about.html">about</a></li>
-                    <li><a class="waves-effect waves-teal btn-flat" id="btnLogin" v-show="!isLogin">페이스북에 로그인하여 새단어등록하기<i class="material-icons left">perm_identity</i></a></li>
             </ul>
         </div>
     </nav>
@@ -44,9 +44,9 @@
         </form>
     </div>
     <div id="write_area" v-cloak>
-        <a class="waves-effect waves-teal btn-flat" v-on:click="isShow=true" v-show="isLogin && !isShow">등록폼 보이기</a>
-        <a class="waves-effect waves-teal btn-flat" v-on:click="isShow=false" v-show="isLogin && isShow">등록폼 가리기</a>
-
+        <a class="waves-effect waves-teal btn-flat teal lighten-5" v-on:click="isShow=true" v-show="isLogin && !isShow">등록폼 보이기<i class="material-icons left">unfold_more</i></a>
+        <a class="waves-effect waves-teal btn-flat teal lighten-5" v-on:click="isShow=false" v-show="isLogin && isShow">등록폼 가리기<i class="material-icons left">unfold_less</i></a>
+        <a class="waves-effect waves-teal btn-flat teal lighten-5" id="btnLogin" v-show="!isLogin">페이스북에 로그인하여 새단어등록하기<i class="material-icons left">perm_identity</i></a>
         <form class="col s12"  v-show="isLogin && isShow" v-on:submit.prevent>
             <div class="row">
                 <div class="input-field col s8">
